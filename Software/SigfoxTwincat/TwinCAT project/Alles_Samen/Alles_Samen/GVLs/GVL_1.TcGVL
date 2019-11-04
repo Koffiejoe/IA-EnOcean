@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.7">
+  <GVL Name="GVL_1" Id="{385ba8bf-824b-4bcb-9d7a-e08cfee83de9}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	sDatastring: STRING(500);
+	
+	Moteeui			: STRING;
+	Appeui			: STRING;
+	UserData		: ST_UserData;
+	PayloadDecoded	: STRING;
+
+	PayloadLength	: DINT;
+	PayloadData		: ARRAY[1..100] OF BYTE;
+	NullByte		: BYTE := 0;
+
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

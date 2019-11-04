@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="Json_XML" Id="{c84197c2-c525-4bd8-a237-097da72f678d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Json_XML
+VAR
+	
+	//sJsontest		: STRING(500) := '{"rx": {"moteeui": "00-59-ac-00-00-15-10-ee", "appeui": "0000000000000000", "userdata": {"seqno": 122, "port": 1, "payload": "MDIwMDA1YWUwOTdhMzYwMDAwZmEwMDAwMDAwMDAwMDA=", "motetx": {"freq": 868300000, "modu": "LoRa", "datr": "SF8BW125", "codr": "4/5"}}, "gwrx":  [{"time": "2017-10-17 12:34:53", "chan": 4, "rfch": 0, "rssi": -34, "lsnr": 11.800000000000001}]}}';	
+	//sJsontest		: STRING(500) := '{"rx": {"moteeui": "00-59-ac-00-00-15-10-ee", "appeui": "0000000000000000", "userdata": {"seqno": 122, "port": 1, "payload": "MDIwMDA1YWUwOTdhMzYwMDAwZmEwMDAwMDAwMDAwMDA=", "motetx": {"freq": 868300000, "modu": "LoRa", "datr": "SF8BW125", "codr": "4/5"}}, "gwrx": [{"time": "2017-10-17 12:34:53", "chan": 4, "rfch": 0, "rssi": -34, "lsnr": 11.800000000000001}]}}';	
+	
+	x : DINT;
+	g : STRING;
+	fbJson			: FB_JsonDomParser;
+	JsonDoc			: SJsonValue;
+	Json_St1		: SJsonValue;
+	JSon_St2		: SJsonValue; 
+	JSon_St3		: SJsonValue;
+	JSon_St4		: SJsonValue;
+	JSon_St5		: SJsonValue;
+	JSon_St6		: SJsonValue;
+	Stringdata		: STRING;
+	
+	i: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR i := 0 TO 498 DO										//Forloop doorloop elk teken appart
+	IF sDatastring[i] = 91 OR sDatastring[i] = 93 THEN		//ALs er een vierkante haak  voor komt
+		sDatastring[i] := 32;								//Zal het door een spatie gewijzigd worden
+	END_IF
+END_FOR
+ 
+JsonDoc := fbJson.ParseDocument(sDatastring);
+
+// rx
+Json_St1 := fbJson.FindMember(jsonDoc, 'rx');			
+
+	// moteeui 
+	JSon_St2 := fbJson.FindMember(Json_St1, 'moteeui');
+	Moteeui := fbJson.GetString(JSon_St2);
+
+	// appeui	
+	JSon_St2 := fbJson.FindMember(Json_St1, 'appeui');
+	Appeui := fbJson.GetString(JSon_St2);
+
+	// userdata
+	JSon_St2 := fbJson.FindMember(Json_St1, 'userdata');
+
+		// seqno
+		JSon_St3 := fbJson.FindMember(Json_St2, 'seqno');
+		UserData.SeqNo := fbJson.GetInt(JSon_St3);
+
+		// port
+		JSon_St3 := fbJson.FindMember(Json_St2, 'port');
+		UserData.Port := fbJson.GetInt(JSon_St3);
+
+		// payload
+		JSon_St3 := fbJson.FindMember(Json_St2, 'payload');
+		UserData.Payload := fbJson.GetString(JSon_St3);
+		PayloadLength:= fbJson.GetBase64(JSon_St3, ADR(PayloadData), SIZEOF(PayloadData));
+		Memcpy(ADR(PayloadDecoded), ADR(PayloadData), PayloadLength);
+		Memcpy(ADR(PayloadDecoded)+PayloadLength, adr(NullByte), 1);
+
+		// motetx
+		JSon_St3 := fbJson.FindMember(Json_St2, 'motetx');
+
+			// freq
+			JSon_St4 := fbJson.FindMember(Json_St3, 'freq');
+			UserData.MoteTx.Freq := fbJson.GetInt(JSon_St4);
+
+			// modu
+			JSon_St4 := fbJson.FindMember(Json_St3, 'modu');
+			UserData.MoteTx.Modu := fbJson.GetString(JSon_St4);
+
+			// datr
+			JSon_St4 := fbJson.FindMember(Json_St3, 'datr');
+			UserData.MoteTx.Datr := fbJson.GetString(JSon_St4);
+
+			// codr
+			JSon_St4 := fbJson.FindMember(Json_St3, 'codr');
+			UserData.MoteTx.Codr := fbJson.GetString(JSon_St4);
+
+		// gwrx
+		JSon_St5 := fbJson.FindMember(Json_St1, 'gwrx');
+		Stringdata := fbJson.GetString(JSon_St5);
+
+		// seqno
+		JSon_St6 := fbJson.FindMember(Json_St5, 'time');
+		UserData.gwrx.TimeRec  := fbJson.GetString(JSon_St6);]]></ST>
+    </Implementation>
+    <LineIds Name="Json_XML">
+      <LineId Id="173" Count="1" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="40" Count="47" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="104" Count="2" />
+      <LineId Id="101" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

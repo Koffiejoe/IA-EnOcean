@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="Tcp_ip" Id="{a48e2599-4892-48cc-9378-f8211a73886e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Tcp_ip
+VAR
+	bConnect: BOOL;
+	bRecieve: BOOL;
+	FB_create: FB_SocketUdpCreate;
+	FB_Recieve: FB_SocketUdpReceiveFrom;
+	FB_close: FB_SocketClose;
+	data : ARRAY[0..500] OF BYTE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FB_create(
+	sSrvNetId:= , 							//Lokaal netwerk (mag leeg blijven)
+	sLocalHost:= '192.168.1.82', 			//Eigen ip van de PC en ingesteld in de gateway gekregen van Dieter
+	nLocalPort:= 811,						//Ingesteld op de gateway
+	bExecute:= bConnect,					//Trigger voor functieblok
+	tTimeout:= T#1S);
+	
+
+FB_Recieve(
+	sSrvNetId:= , 									//Lokaal netwerk (mag leeg blijven)
+	hSocket:= FB_create.hSocket,					 
+	cbLen:= SIZEOF(data), 							//Kijkt naar de lengte van het bericht
+	pDest:= ADR(data), 								//Plaat waar de het bericht wordt opgeslaan
+	bExecute:= NOT FB_recieve.bBusy AND bRecieve, 	//Trigger voor functieblok
+	tTimeout:= T#1S);
+	
+FB_close(
+	sSrvNetId:= , 							//Lokaal netwerk (mag leeg blijven)
+	hSocket:= FB_create.hSocket, 			
+	bExecute:= NOT bConnect, 				//Sluiten van de connectie 
+	tTimeout:= T#1S);
+	
+IF FB_Recieve.nRecBytes > 0 THEN 										//Dit gebuert op het moment dat er data binnenkomt
+	memcpy(ADR(sDatastring),ADR(data),FB_Recieve.nRecBytes);			//Het bericht zal worden opgeslaan in Datastring
+	memcpy(ADR(sDatastring) + FB_Recieve.nRecBytes,ADR(NullByte),1);	//Nullbyte word gedetecteerd stoppen met bericht plaatsen
+	Json_XML();															//Oproepen POU Json_XML - MOET hier anders bluescreen
+	Decoder();
+	DecoderCO2();															//Oproepen POU Decoder  - MOET hier anders bluescreen
+END_IF
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="Tcp_ip">
+      <LineId Id="14" Count="19" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="48" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
