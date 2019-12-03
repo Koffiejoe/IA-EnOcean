@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="1e6bfc10-cb9a-4fcc-bd5e-120088220b20">POU</Type>
+      <From>POU</From>
+      <To>Tcp_ip</To>
+    </RenamedType>
+  </Renames>
+</Refactors>
