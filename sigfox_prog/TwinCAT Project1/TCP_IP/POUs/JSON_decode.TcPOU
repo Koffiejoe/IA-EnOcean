@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="JSON_decode" Id="{8e01a1e0-72a7-4677-b34c-52a05cbdaae2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM JSON_decode
+VAR
+	mydata : sensorData;
+	fixedMessage : STRING(150) := '{"id": "4CCE8E","battery": 80,"flag": 0,"mode": 1,"temp": 23,"hum": 0}';
+	//block
+	fbJson		: FB_JsonDomParser;
+	//parsed
+	parsedDoc	: SJsonValue;
+	parsedVal	: SJsonValue;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// rx
+parsedDoc := fbJson.ParseDocument(fixedMessage);
+
+parsedVal := fbJson.FindMember(parsedDoc, 'id');
+mydata.id := fbJson.GetString(parsedVal);
+
+parsedVal := fbJson.FindMember(parsedDoc, 'battery');
+mydata.battery := fbJson.GetInt(parsedVal);
+
+parsedVal := fbJson.FindMember(parsedDoc, 'flag');
+mydata.flag := fbJson.GetInt(parsedVal);
+
+parsedVal := fbJson.FindMember(parsedDoc, 'mode');
+mydata.mode := fbJson.GetInt(parsedVal);
+
+parsedVal := fbJson.FindMember(parsedDoc, 'temp');
+mydata.temp := fbJson.GetInt(parsedVal);
+
+parsedVal := fbJson.FindMember(parsedDoc, 'hum');
+mydata.hum := fbJson.GetInt(parsedVal);
+(*
+parsedVal2 := fbJson.FindMember(parsedVal1, 'battery');
+mydata.battery := fbJson.GetString(parsedVal);
+
+parsedVal3 := fbJson.FindMember(parsedVal2, 'flag');
+mydata.flag := fbJson.GetString(parsedVal);
+
+parsedVal4 := fbJson.FindMember(parsedVal3, 'mode');
+mydata.mode := fbJson.GetString(parsedVal);
+
+parsedVal5 := fbJson.FindMember(parsedVal4, 'temp');
+mydata.temp := fbJson.GetString(parsedVal);
+
+parsedVal6 := fbJson.FindMember(parsedVal5, 'hum');
+mydata.hum := fbJson.GetString(parsedVal);*)
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="JSON_decode">
+      <LineId Id="33" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="129" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="135" Count="1" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="138" Count="1" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="97" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
