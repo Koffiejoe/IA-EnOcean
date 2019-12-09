@@ -6,9 +6,11 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[JSON_decode();]]></ST>
+      <ST><![CDATA[tcp_ip();
+//JSON_decode();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="6" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
