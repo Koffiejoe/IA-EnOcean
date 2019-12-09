@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <DUT Name="sensorData" Id="{009092c4-172e-478d-9a02-cfa2bd1b59de}">
+    <Declaration><![CDATA[TYPE sensorData :
+STRUCT
+	id			: STRING(20);
+	flag		: DINT; 
+	mode		: DINT;
+	temp		: DINT;
+	hum			: DINT;
+	battery		: DINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
