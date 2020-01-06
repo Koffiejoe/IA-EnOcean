@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="JSonEncode" Id="{19f39f1d-82cd-42a9-abe5-c00fa711897b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM JSonEncode
+VAR
+	jsonHum  : STRING;
+	jsonTemp : STRING;
+	jsonSwitch : STRING;
+	AllStrings: STRING(1024);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*zo moet die ongeveer eruit zien
+[
+{"type": "sigfox", "id": "	xx	","battery": 0,"flag": 0,"mode": 0,"temp": 0,"hum": 0},
+
+{"type": "enocean", "id": "	xx	", "value": 0},
+{"type": "plc", "id": "	xx	", "raam": 0, "sprinkler": 0, "verwarming": 0}
+
+]
+
+ 
+{
+    "topic": "sensordata",  <<--Deze
+    "data": {
+        "humidity": 0,
+        "temperature": 0,
+        "switch": 0
+    }
+}
+*)
+jsonHum := '';
+jsonHum := concat('{"topic": "sensordata", "data": {"humidity": ', REAL_TO_STRING(waardes.humitity));
+jsonHum := concat(jsonHum, ',');
+
+Waardes.jsonHum := jsonHum;
+
+jsonTemp := '';
+jsonTemp := concat(jsonHum, '"temperature":');
+jsonTemp := concat(jsonTemp, REAL_TO_STRING(waardes.temp));
+jsonTemp := concat(jsonTemp, ',');
+
+Waardes.jsonTemp := JsonTemp;
+
+jsonSwitch := '';
+jsonSwitch := concat(jsonTemp,'"switch":' );
+jsonSwitch := concat(jsonSwitch, INT_TO_STRING(waardes.switchNR));
+jsonSwitch := concat(jsonSwitch, '}}');
+
+Waardes.jsonSwitch := jsonSwitch;
+ 
+AllStrings := concat(jsonHum,JsonTemp);
+AllStrings := concat(AllStrings,jsonSwitch);
+Waardes.Allstrings := Allstrings;
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="JSonEncode">
+      <LineId Id="63" Count="44" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

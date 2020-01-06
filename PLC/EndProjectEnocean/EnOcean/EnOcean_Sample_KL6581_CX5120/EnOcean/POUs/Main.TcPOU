@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="Main" Id="{39b8f405-16cb-4a36-9c9e-2b9b67c73480}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Main
+VAR
+	fbKL6581			:	FB_KL6581;
+	fbsearch 			:	FB_EnOcean_Search;
+	//fbRecGeneric		: 	FB_Rec_Generic;
+	readTemp			: 	readTemp2;
+	whichSwitch			:	switch2;
+	contactSensor1		: 	contact;
+	contactSensor2		:	contact;
+	
+    temp			: 	REAL;
+	humitity 			: 	REAL;
+	switchNR			: 	INT;
+	contact1			: 	BOOL;
+	contact2			:	BOOL;
+	tempError			:	BOOL;
+	humitityError		: 	BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[JsonEncode();
+
+// Init
+fbKL6581(bInit := TRUE, stKL6581_in := GVL_EnOcean.stKL6581Input, stKL6581_out := GVL_EnOcean.stKL6581Output);
+GVL_EnOcean.stKL6581 := fbKL6581.str_KL6581;
+fbsearch(bStart := TRUE, str_KL6581 := GVL_EnOcean.stKL6581, byNode := 0);
+
+//link sensors aan POU
+readTemp(sensorID := 92351965);
+whichswitch(sensorID := 4277441636);
+contactSensor1(sensorID := 84246605);
+contactSensor2(sensorID := 84246605);
+
+// IF sensor value changes
+IF didSensorChange(readTemp := readTemp, whichSwitch := whichSwitch) THEN
+	temp := readTemp.tempOutput;
+	humitity := readTemp.humitityOut;
+	switchNR := whichSwitch.switchNR;
+	contact1 := contactSensor1.contact;
+	contact2 := contactSensor2.contact;
+	mqttconn();
+END_IF
+	
+// handle exceptions	
+
+IF temp < 20 OR temp > 40 THEN
+	tempError := TRUE;
+END_IF
+
+IF humitity < 40 OR humitity > 60 THEN
+	humitityError := TRUE;
+END_IF
+
+(*
+IF switchNR <> 0 THEN
+	IF switchNR = 2 THEN
+		<handle switch>
+	END_IF
+END_IF
+*)
+
+(*
+Sensor IDs:
+Temp+vochtig ==> 92351965 : ar_value[1] = temp, ar_value[2] = vochtig
+schakelaar ==> 4277441636 : ar_value[3]
+raamcontact1 ==> 84246605 : ar_value[3]
+raamcontact2 ==> 84246441: ar_value[3]
+
+
+
+
+*)]]></ST>
+    </Implementation>
+    <LineIds Name="Main">
+      <LineId Id="112" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="92" Count="2" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="39" Count="4" />
+      <LineId Id="35" Count="3" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

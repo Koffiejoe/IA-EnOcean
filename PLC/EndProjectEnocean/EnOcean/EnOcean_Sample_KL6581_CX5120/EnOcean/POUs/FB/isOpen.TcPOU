@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
+  <POU Name="isOpen" Id="{48a17815-3d01-4dd8-9f86-4d30e0d44ec4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION isOpen : BOOL
+VAR_INPUT
+	sensorID			:	DWORD;
+END_VAR
+VAR
+	fbRecGeneric		: 	FB_Rec_Generic;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbRecGeneric(str_KL6581 := GVL_EnOcean.stKL6581, byNode := 0, dw_ID := sensorID);
+
+IF fbRecGeneric.ar_Value[3] = 8 THEN
+	isOpen := TRUE;
+ELSE
+	isOpen := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="isOpen">
+      <LineId Id="7" Count="0" />
+      <LineId Id="13" Count="5" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

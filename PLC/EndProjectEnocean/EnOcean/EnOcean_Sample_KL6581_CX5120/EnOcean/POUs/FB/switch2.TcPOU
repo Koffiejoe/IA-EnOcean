@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
+  <POU Name="switch2" Id="{1c9e786b-713a-4b4c-967a-4aa05b2a78e9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK switch2
+VAR
+	fbRecGeneric		: 	FB_Rec_Generic;
+END_VAR
+VAR_INPUT
+	sensorID			: DWORD;
+END_VAR
+VAR_OUTPUT
+	switchNR			: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbRecGeneric(str_KL6581 := GVL_EnOcean.stKL6581, byNode := 0, dw_ID := sensorID);
+
+IF fbRecGeneric.bReceive = FALSE THEN
+	IF fbRecGeneric.ar_Value[3] = 16 THEN
+		switchNR := 1;
+	ELSIF fbRecGeneric.ar_Value[3] = 80 THEN
+		switchNR := 2;
+	ELSIF fbRecGeneric.ar_Value[3] = 48 THEN
+		switchNR := 3;
+	ELSIF fbRecGeneric.ar_Value[3] = 112 THEN
+		switchNR := 4;
+	ELSE 
+		switchNR := 0;
+	END_IF
+	Waardes.switchNR := switchNR;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="switch2">
+      <LineId Id="18" Count="13" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

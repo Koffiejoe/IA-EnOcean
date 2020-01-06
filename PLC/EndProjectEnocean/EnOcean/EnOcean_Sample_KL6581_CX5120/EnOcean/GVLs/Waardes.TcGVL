@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
+  <GVL Name="Waardes" Id="{705429d6-b357-450a-aba4-109b640803b4}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	temp 				: 	REAL;
+	humitity 			: 	REAL;
+	switchNR			: 	INT;
+	contact1			: 	BOOL;
+	contact2			:	BOOL;
+	jsonHum 		    :	STRING;
+	jsonTemp            :   STRING;
+	jsonSwitch          :   STRING;
+	Allstrings 			:   STRING(1024);
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

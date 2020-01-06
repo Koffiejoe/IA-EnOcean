@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
+  <POU Name="readTemp2" Id="{17a03a96-4480-4b27-a861-f70573d50ab0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK readTemp2
+VAR
+	fbRecGeneric		: 	FB_Rec_Generic;
+END_VAR
+VAR_INPUT
+	sensorID			: DWORD;
+END_VAR
+VAR_OUTPUT
+	tempOutput			: LREAL;
+	humitityOut			: LREAL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbRecGeneric(str_KL6581 := GVL_EnOcean.stKL6581, byNode := 0, dw_ID := sensorID);
+
+IF fbRecGeneric.bReceive = FALSE THEN
+	tempOutput := F_Scale(fRawData := fbRecGeneric.ar_Value[1], fRawDataLowerOffLimit := 0, fRawDataUpperOffLimit := 255, fScaleDataLowerOffLimit := -20, fScaleDataUpperOffLimit := 60);
+	humitityOut := F_Scale(fRawData := fbRecGeneric.ar_Value[2], fRawDataLowerOffLimit := 0, fRawDataUpperOffLimit := 255, fScaleDataLowerOffLimit := 0, fScaleDataUpperOffLimit := 100);
+	
+	Waardes.temp := tempOutput;
+	Waardes.humitity := humitityOut;
+	
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="readTemp2">
+      <LineId Id="10" Count="4" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
